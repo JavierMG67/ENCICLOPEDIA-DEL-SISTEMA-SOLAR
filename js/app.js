@@ -1,12 +1,13 @@
 'use strict';
 
 document.addEventListener('DOMContentLoaded', () => {
+  const TIPOS_VALIDOS = ['todos', 'rocoso', 'gaseoso', 'helado'];
   const filtroGuardado = localStorage.getItem('solar_filtro') || 'todos';
   const planetas = document.querySelectorAll('.planeta');
   const botones = document.querySelectorAll('.btn-filtro');
 
   const aplicarFiltro = (tipo) => {
-    const filtroValido = ['todos', 'rocoso', 'gaseoso', 'helado'].includes(tipo) ? tipo : 'todos';
+    const filtroValido = TIPOS_VALIDOS.includes(tipo) ? tipo : 'todos';
 
     planetas.forEach((planeta) => {
       const coincide = filtroValido === 'todos' || planeta.dataset.tipo === filtroValido;
