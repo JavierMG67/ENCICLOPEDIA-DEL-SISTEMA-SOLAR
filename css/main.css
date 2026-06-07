@@ -4,6 +4,7 @@
   --accent: #64ffda;
   --focus: #ffd700;
   --gap: 1.5rem;
+  --min-card-width: 280px;
   --font: system-ui, -apple-system, sans-serif;
 }
 
@@ -72,9 +73,14 @@ nav ul,
   cursor: pointer;
 }
 
+.btn-filtro[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--bg);
+}
+
 #catalogo {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(var(--min-card-width), 1fr));
   gap: var(--gap);
   padding: 2rem;
 }
