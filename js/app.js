@@ -9,6 +9,7 @@ const cuerposCelestes = [
     distanciaPx: 0,
     periodoDias: 0,
     color: "#ffb300",
+    imagenId: "sun",
     descripcion:
       "Nuestra estrella y el centro gravitacional que mantiene unido al Sistema Solar.",
     datos: {
@@ -30,6 +31,7 @@ const cuerposCelestes = [
     distanciaPx: 74,
     periodoDias: 88,
     color: "#9c9387",
+    imagenId: "mercury",
     descripcion:
       "El planeta mas pequeno y cercano al Sol, con superficie craterizada y cambios extremos de temperatura.",
     datos: {
@@ -51,6 +53,7 @@ const cuerposCelestes = [
     distanciaPx: 104,
     periodoDias: 225,
     color: "#d8b46f",
+    imagenId: "venus",
     descripcion:
       "Un mundo rocoso cubierto por nubes densas y un efecto invernadero extremo.",
     datos: {
@@ -72,6 +75,7 @@ const cuerposCelestes = [
     distanciaPx: 138,
     periodoDias: 365.25,
     color: "#3d8bd9",
+    imagenId: "earth",
     descripcion:
       "El unico planeta conocido con vida, oceanos estables y una atmosfera protectora.",
     datos: {
@@ -93,6 +97,7 @@ const cuerposCelestes = [
     distanciaPx: 174,
     periodoDias: 687,
     color: "#c65a3a",
+    imagenId: "mars",
     descripcion:
       "El planeta rojo, frio y desertico, con casquetes polares y evidencias de agua antigua.",
     datos: {
@@ -114,6 +119,7 @@ const cuerposCelestes = [
     distanciaPx: 232,
     periodoDias: 4332.59,
     color: "#d7a56f",
+    imagenId: "jupiter",
     descripcion:
       "El gigante gaseoso mas grande del sistema, con bandas atmosfericas y una intensa actividad de tormentas.",
     datos: {
@@ -135,6 +141,7 @@ const cuerposCelestes = [
     distanciaPx: 294,
     periodoDias: 10759.22,
     color: "#d9c27f",
+    imagenId: "saturn",
     descripcion:
       "Un gigante gaseoso de baja densidad, reconocido por su amplio sistema de anillos.",
     datos: {
@@ -156,6 +163,7 @@ const cuerposCelestes = [
     distanciaPx: 354,
     periodoDias: 30688.5,
     color: "#7dd7d8",
+    imagenId: "uranus",
     descripcion:
       "Un gigante helado azul verdoso que rota de lado y posee anillos tenues.",
     datos: {
@@ -177,6 +185,7 @@ const cuerposCelestes = [
     distanciaPx: 410,
     periodoDias: 60182,
     color: "#4169d8",
+    imagenId: "neptune",
     descripcion:
       "El gigante helado mas lejano, con vientos extremos y un color azul intenso por el metano.",
     datos: {
@@ -214,6 +223,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let slideActual = 0;
   const elementosOrbitales = new Map();
 
+  const obtenerSrcImagen = (cuerpo) =>
+    `../img/${(cuerpo.imagenId || cuerpo.id).trim()}.webp`;
+
   const crearFichaTecnica = (cuerpo) =>
     Object.entries(cuerpo.datos)
       .map(([termino, valor]) => `<dt>${termino}</dt><dd>${valor}</dd>`)
@@ -229,6 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
     solVisual.style.setProperty("--planet-color", sol.color);
     solVisual.style.setProperty("--planet-size", `${sol.radioPx * 2}px`);
     solVisual.setAttribute("aria-label", `Ver informacion de ${sol.nombre}`);
+    solVisual.innerHTML = `<img src="${obtenerSrcImagen(sol)}" alt="${sol.nombre}" loading="lazy" />`;
     sistemaSolar.appendChild(solVisual);
     elementosOrbitales.set(0, { planeta: solVisual, orbita: null });
 
@@ -249,6 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
       planeta.style.setProperty("--planet-size", `${cuerpo.radioPx * 2}px`);
       planeta.style.setProperty("--planet-color", cuerpo.color);
       planeta.setAttribute("aria-label", `Ver informacion de ${cuerpo.nombre}`);
+      planeta.innerHTML = `<img src="${obtenerSrcImagen(cuerpo)}" alt="${cuerpo.nombre}" loading="lazy" />`;
 
       orbita.appendChild(planeta);
       sistemaSolar.appendChild(orbita);
@@ -267,7 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
       slide.setAttribute("aria-labelledby", `slide-title-${cuerpo.id}`);
       slide.innerHTML = `
         <div class="slide-visual" aria-hidden="true">
-          <div class="slide-orbe" style="--planet-color: ${cuerpo.color}"></div>
+          <img src="${obtenerSrcImagen(cuerpo)}" alt="${cuerpo.nombre}" loading="lazy" />
         </div>
         <div class="slide-info">
           <span class="tipo">${cuerpo.tipo}</span>
