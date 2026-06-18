@@ -486,6 +486,110 @@ nav ul,
   background: transparent;
 }
 
+/* Contenedor circular perfecto del slider */
+.slide-visual {
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  width: clamp(5rem, 18vw, 9rem);
+  height: clamp(5rem, 18vw, 9rem);
+  aspect-ratio: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.slide-orbe {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.85), transparent 18%),
+    var(--planet-color);
+  box-shadow: 0 0 2rem color-mix(in srgb, var(--planet-color) 64%, transparent);
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.slide-orbe::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(255, 255, 255, 0.3) 45%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0.3) 55%,
+    transparent 60%,
+    transparent 100%
+  );
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.slide-planeta.activo .slide-orbe::before,
+.slide-planeta.active .slide-orbe::before {
+  animation: reflejo-vitrina 1.8s ease-in-out;
+}
+
+@keyframes reflejo-vitrina {
+  0% {
+    left: -100%;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+.slide-orbe::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.slide-planeta.activo .slide-orbe::after,
+.slide-planeta.active .slide-orbe::after {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 20px var(--accent),
+    inset 0 0 20px rgba(123, 223, 242, 0.3);
+}
+
 /* Antorchas cosmicas en las esquinas del escenario */
 .escenario-3d::before,
 .escenario-3d::after {

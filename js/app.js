@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
     solVisual.style.setProperty("--planet-color", sol.color);
     solVisual.style.setProperty("--planet-size", `${sol.radioPx * 2}px`);
     solVisual.setAttribute("aria-label", `Ver informacion de ${sol.nombre}`);
-    solVisual.innerHTML = `<img src="${obtenerSrcImagen(sol)}" alt="${sol.nombre}" loading="lazy" />`;
+    solVisual.innerHTML = `<img src="${obtenerSrcImagen(sol)}" alt="${sol.nombre}" loading="lazy">`;
     sistemaSolar.appendChild(solVisual);
     elementosOrbitales.set(0, { planeta: solVisual, orbita: null });
 
@@ -262,7 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
       planeta.style.setProperty("--planet-size", `${cuerpo.radioPx * 2}px`);
       planeta.style.setProperty("--planet-color", cuerpo.color);
       planeta.setAttribute("aria-label", `Ver informacion de ${cuerpo.nombre}`);
-      planeta.innerHTML = `<img src="${obtenerSrcImagen(cuerpo)}" alt="${cuerpo.nombre}" loading="lazy" />`;
+      planeta.innerHTML = `<img src="${obtenerSrcImagen(cuerpo)}" alt="${cuerpo.nombre}" loading="lazy">`;
 
       orbita.appendChild(planeta);
       sistemaSolar.appendChild(orbita);
@@ -281,7 +281,9 @@ document.addEventListener("DOMContentLoaded", () => {
       slide.setAttribute("aria-labelledby", `slide-title-${cuerpo.id}`);
       slide.innerHTML = `
         <div class="slide-visual" aria-hidden="true">
-          <img src="${obtenerSrcImagen(cuerpo)}" alt="${cuerpo.nombre}" loading="lazy" />
+          <div class="slide-orbe" style="--planet-color: ${cuerpo.color}">
+            <img src="${obtenerSrcImagen(cuerpo)}" alt="${cuerpo.nombre}" loading="lazy">
+          </div>
         </div>
         <div class="slide-info">
           <span class="tipo">${cuerpo.tipo}</span>
@@ -323,6 +325,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     sliderTrack.style.transform = `translateX(-${posicionVisible * 100}%)`;
 
+    document.querySelectorAll(".slide-planeta").forEach((slide) => {
+      const activo = Number(slide.dataset.index) === slideActual;
+      slide.classList.toggle("activo", activo);
+      slide.classList.toggle("active", activo);
+    });
+
     document.querySelectorAll(".indicator").forEach((indicator) => {
       const activo = Number(indicator.dataset.index) === slideActual;
       const slide = document.querySelector(
@@ -339,7 +347,9 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const irASlide = (index) => {
-    const slide = document.querySelector(`.slide-planeta[data-index="${index}"]`);
+    const slide = document.querySelector(
+      `.slide-planeta[data-index="${index}"]`,
+    );
     if (!slide || slide.style.display === "none") {
       return;
     }
@@ -359,7 +369,8 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     const posicionActual = Math.max(0, slidesVisibles.indexOf(slideActivo));
     const siguiente =
-      (posicionActual + direccion + slidesVisibles.length) % slidesVisibles.length;
+      (posicionActual + direccion + slidesVisibles.length) %
+      slidesVisibles.length;
 
     irASlide(Number(slidesVisibles[siguiente].dataset.index));
   };
@@ -423,7 +434,9 @@ document.addEventListener("DOMContentLoaded", () => {
   renderSlider();
 
   document.querySelectorAll(".planeta-visual").forEach((planeta) => {
-    planeta.addEventListener("click", () => irASlide(Number(planeta.dataset.index)));
+    planeta.addEventListener("click", () =>
+      irASlide(Number(planeta.dataset.index)),
+    );
   });
 
   document.querySelectorAll(".indicator").forEach((indicator) => {
@@ -434,10 +447,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelectorAll(".btn-ficha").forEach((boton) => {
     boton.addEventListener("click", () => {
-      const ficha = document.querySelector(`#${boton.getAttribute("aria-controls")}`);
+      const ficha = document.querySelector(
+        `#${boton.getAttribute("aria-controls")}`,
+      );
       const expandida = boton.getAttribute("aria-expanded") === "true";
       boton.setAttribute("aria-expanded", expandida ? "false" : "true");
-      boton.textContent = expandida ? "Ver ficha tecnica" : "Ocultar ficha tecnica";
+      boton.textContent = expandida
+        ? "Ver ficha tecnica"
+        : "Ocultar ficha tecnica";
       ficha.classList.toggle("expanded", !expandida);
     });
   });
@@ -469,7 +486,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const rect = escenario.getBoundingClientRect();
     const x = (event.clientX - rect.left) / rect.width - 0.5;
     const y = (event.clientY - rect.top) / rect.height - 0.5;
-    document.documentElement.style.setProperty("--rotate-x", `${60 - y * 16}deg`);
+    document.documentElement.style.setProperty(
+      "--rotate-x",
+      `${60 - y * 16}deg`,
+    );
     document.documentElement.style.setProperty("--rotate-y", `${x * 18}deg`);
   });
 
