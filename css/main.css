@@ -486,6 +486,535 @@ nav ul,
   background: transparent;
 }
 
+.pantalla-entrada {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  border-radius: 0;
+  margin: 0;
+  z-index: 1000;
+}
+
+/* === Pantalla de entrada bloqueante === */
+.pantalla-entrada {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: #000;
+  z-index: 1000;
+  overflow: hidden;
+  transition:
+    opacity 0.8s ease,
+    visibility 0.8s ease;
+}
+
+.pantalla-entrada.oculta {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.pantalla-entrada .espacio-fondo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  overflow: hidden;
+}
+
+.pantalla-entrada .planeta-fondo {
+  position: absolute;
+  bottom: -150px;
+  left: -100px;
+  width: 600px;
+  height: 600px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(100, 180, 255, 0.4), transparent 50%),
+    radial-gradient(circle at 50% 50%, #1e3a5f 0%, #0a1628 70%);
+  border-radius: 50%;
+  box-shadow:
+    inset -40px -40px 80px rgba(0, 0, 0, 0.9),
+    0 0 60px rgba(70, 130, 200, 0.4);
+  opacity: 0.8;
+}
+
+.pantalla-entrada .estrellas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, #fff, transparent),
+    radial-gradient(2px 2px at 60% 70%, #fff, transparent),
+    radial-gradient(1px 1px at 50% 50%, #fff, transparent),
+    radial-gradient(2px 2px at 80% 10%, #fff, transparent),
+    radial-gradient(1px 1px at 30% 80%, #fff, transparent),
+    radial-gradient(2px 2px at 70% 40%, #fff, transparent);
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: parpadeo-estrellas 3s ease-in-out infinite;
+  opacity: 0.6;
+}
+
+.contenido-bienvenida {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 2rem;
+  text-align: center;
+}
+
+.titulo-espacial {
+  font-family: "Courier New", monospace;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: #8b0000;
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  margin-bottom: 3rem;
+  text-shadow:
+    0 0 10px #8b0000,
+    0 0 20px #8b0000,
+    0 0 40px #ff0000,
+    4px 4px 0 #000;
+  animation: titulo-pulso 3s ease-in-out infinite;
+  line-height: 1.2;
+}
+
+.btn-inicio-principal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1.5rem 4rem;
+  background: linear-gradient(180deg, #8b0000 0%, #5c0000 100%);
+  border: 4px solid #ff0000;
+  border-radius: 4px;
+  color: #fff;
+  font-family: "Courier New", monospace;
+  font-size: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 8px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 0 30px rgba(255, 0, 0, 0.6),
+    inset 0 0 20px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+  margin-bottom: 2rem;
+}
+
+.btn-inicio-principal:hover {
+  background: linear-gradient(180deg, #ff0000 0%, #8b0000 100%);
+  box-shadow:
+    0 0 50px rgba(255, 0, 0, 0.9),
+    inset 0 0 30px rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+  border-color: #ff4444;
+}
+
+.instruccion-acceso {
+  font-family: "Courier New", monospace;
+  font-size: 0.9rem;
+  color: #8892b0;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  animation: texto-parpadeo 2s ease-in-out infinite;
+}
+
+.pantalla-entrada::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 2px,
+    rgba(0, 0, 0, 0.3) 2px,
+    rgba(0, 0, 0, 0.3) 4px
+  );
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.4;
+}
+
+body.menu-activo {
+  overflow: hidden;
+  height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .titulo-espacial {
+    font-size: 1.5rem;
+    letter-spacing: 3px;
+  }
+
+  .btn-inicio-principal {
+    font-size: 1.5rem;
+    padding: 1.2rem 2.5rem;
+    gap: 1rem;
+  }
+
+  .pantalla-entrada .planeta-fondo {
+    width: 400px;
+    height: 400px;
+    bottom: -100px;
+    left: -50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .titulo-espacial {
+    font-size: 1.2rem;
+  }
+
+  .btn-inicio-principal {
+    font-size: 1.2rem;
+    padding: 1rem 2rem;
+    letter-spacing: 4px;
+  }
+
+  .instruccion-acceso {
+    font-size: 0.75rem;
+  }
+}
+
+/* === Menu espacial estilo pixel art retro === */
+.menu-espacial-retro {
+  position: relative;
+  background: #000;
+  border: 4px solid #8b0000;
+  border-radius: 4px;
+  padding: 0;
+  margin: 2rem auto;
+  max-width: 900px;
+  overflow: hidden;
+  box-shadow:
+    0 0 40px rgba(139, 0, 0, 0.6),
+    inset 0 0 80px rgba(0, 0, 0, 0.8);
+  min-height: 500px;
+}
+
+.espacio-fondo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  overflow: hidden;
+}
+
+.planeta-fondo {
+  position: absolute;
+  bottom: -150px;
+  left: -100px;
+  width: 600px;
+  height: 600px;
+  background: 
+    radial-gradient(circle at 30% 30%, rgba(100, 180, 255, 0.4), transparent 50%),
+    radial-gradient(circle at 50% 50%, #1e3a5f 0%, #0a1628 70%);
+  border-radius: 50%;
+  box-shadow:
+    inset -40px -40px 80px rgba(0, 0, 0, 0.9),
+    0 0 60px rgba(70, 130, 200, 0.4);
+  opacity: 0.8;
+}
+
+.planeta-fondo::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 25%;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(100, 200, 255, 0.6), transparent 70%);
+  border-radius: 50%;
+  filter: blur(8px);
+  animation: tormenta-planetaria 20s linear infinite;
+}
+
+@keyframes tormenta-planetaria {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.2); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.estrellas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(2px 2px at 20% 30%, #fff, transparent),
+    radial-gradient(2px 2px at 60% 70%, #fff, transparent),
+    radial-gradient(1px 1px at 50% 50%, #fff, transparent),
+    radial-gradient(2px 2px at 80% 10%, #fff, transparent),
+    radial-gradient(1px 1px at 30% 80%, #fff, transparent),
+    radial-gradient(2px 2px at 70% 40%, #fff, transparent),
+    radial-gradient(1px 1px at 90% 60%, #fff, transparent),
+    radial-gradient(2px 2px at 40% 20%, #fff, transparent);
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: parpadeo-estrellas 3s ease-in-out infinite;
+  opacity: 0.6;
+}
+
+.estacion-espacial {
+  position: absolute;
+  top: 40%;
+  right: 10%;
+  width: 200px;
+  height: 120px;
+  background: 
+    linear-gradient(90deg, #2a3f5f 0%, #1a2f4f 50%, #0a1f3f 100%);
+  border: 2px solid #4a5f7f;
+  box-shadow:
+    0 0 20px rgba(74, 95, 127, 0.5),
+    inset 0 0 10px rgba(0, 0, 0, 0.8);
+  opacity: 0.7;
+}
+
+.estacion-espacial::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -60px;
+  width: 80px;
+  height: 40px;
+  background: linear-gradient(90deg, #1a2f4f, #2a3f5f);
+  border: 2px solid #4a5f7f;
+  transform: translateY(-50%);
+}
+
+.estacion-espacial::after {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  width: 40px;
+  height: 180px;
+  background: linear-gradient(180deg, #2a3f5f, #1a2f4f);
+  border: 2px solid #4a5f7f;
+  transform: translateX(-50%);
+}
+
+.contenido-menu {
+  position: relative;
+  z-index: 10;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.titulo-principal {
+  font-family: 'Courier New', monospace;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: #8b0000;
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  margin-bottom: 3rem;
+  text-shadow:
+    0 0 10px #8b0000,
+    0 0 20px #8b0000,
+    0 0 40px #ff0000,
+    4px 4px 0px #000;
+  animation: titulo-pulso 3s ease-in-out infinite;
+  line-height: 1.2;
+}
+
+.titulo-linea {
+  display: block;
+}
+
+@keyframes titulo-pulso {
+  0%, 100% {
+    text-shadow:
+      0 0 10px #8b0000,
+      0 0 20px #8b0000,
+      0 0 40px #ff0000,
+      4px 4px 0px #000;
+    transform: scale(1);
+  }
+  50% {
+    text-shadow:
+      0 0 20px #8b0000,
+      0 0 40px #8b0000,
+      0 0 60px #ff0000,
+      4px 4px 0px #000;
+    transform: scale(1.02);
+  }
+}
+
+.menu-botones {
+  margin: 2rem 0;
+}
+
+.btn-inicio-retro {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1.5rem 4rem;
+  background: linear-gradient(180deg, #8b0000 0%, #5c0000 100%);
+  border: 4px solid #ff0000;
+  border-radius: 4px;
+  text-decoration: none;
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  font-size: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 8px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 0 30px rgba(255, 0, 0, 0.6),
+    inset 0 0 20px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.btn-icono {
+  font-size: 1.5rem;
+  animation: flecha-parpadeo 1s ease-in-out infinite;
+  text-shadow: 0 0 10px #fff;
+}
+
+@keyframes flecha-parpadeo {
+  0%, 100% { opacity: 1; transform: translateX(0); }
+  50% { opacity: 0.5; transform: translateX(-8px); }
+}
+
+.btn-texto {
+  position: relative;
+  z-index: 2;
+}
+
+.btn-brillo {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  animation: brillo-scan 3s ease-in-out infinite;
+}
+
+@keyframes brillo-scan {
+  0%, 100% { left: -100%; }
+  50% { left: 100%; }
+}
+
+.btn-inicio-retro:hover {
+  background: linear-gradient(180deg, #ff0000 0%, #8b0000 100%);
+  box-shadow:
+    0 0 50px rgba(255, 0, 0, 0.9),
+    inset 0 0 30px rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+  border-color: #ff4444;
+}
+
+.menu-footer {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid rgba(139, 0, 0, 0.5);
+}
+
+.parpadeo {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: #8892b0;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  animation: texto-parpadeo 2s ease-in-out infinite;
+}
+
+@keyframes texto-parpadeo {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.menu-espacial-retro::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.3) 2px,
+    rgba(0, 0, 0, 0.3) 4px
+  );
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.4;
+}
+
+@media (max-width: 768px) {
+  .menu-espacial-retro {
+    margin: 1rem;
+    min-height: 400px;
+  }
+  
+  .titulo-principal {
+    font-size: 1.5rem;
+    letter-spacing: 3px;
+  }
+  
+  .btn-inicio-retro {
+    font-size: 1.5rem;
+    padding: 1.2rem 2.5rem;
+    gap: 1rem;
+  }
+  
+  .planeta-fondo {
+    width: 400px;
+    height: 400px;
+    bottom: -100px;
+    left: -50px;
+  }
+  
+  .estacion-espacial {
+    transform: scale(0.7);
+    right: 5%;
+  }
+}
+
+@media (max-width: 480px) {
+  .titulo-principal {
+    font-size: 1.2rem;
+  }
+  
+  .btn-inicio-retro {
+    font-size: 1.2rem;
+    padding: 1rem 2rem;
+    letter-spacing: 4px;
+  }
+  
+  .parpadeo {
+    font-size: 0.75rem;
+  }
+}
+
 /* Contenedor circular perfecto del slider */
 .slide-visual {
   display: grid;
@@ -590,6 +1119,111 @@ nav ul,
     inset 0 0 20px rgba(123, 223, 242, 0.3);
 }
 
+/* === Orbes 3D interactivos tipo pokeparada === */
+.slide-visual {
+  perspective: 800px;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.slide-visual:active {
+  cursor: grabbing;
+}
+
+.slide-orbe {
+  transform-style: preserve-3d;
+  transition: transform 0.1s linear;
+  will-change: transform;
+}
+
+.slide-orbe img {
+  pointer-events: none;
+}
+
+/* Menu de navegacion sticky */
+nav {
+  background: rgba(10, 10, 26, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(123, 223, 242, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  border-radius: 0 0 12px 12px;
+  margin: 0 auto;
+  width: min(92%, 1200px);
+}
+
+nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  justify-content: center;
+  list-style: none;
+  padding: 1.2rem 1rem;
+  margin: 0;
+}
+
+nav a {
+  color: var(--text);
+  text-decoration: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  position: relative;
+  display: inline-block;
+  background: rgba(123, 223, 242, 0.05);
+  border: 1px solid transparent;
+}
+
+nav a:hover {
+  color: var(--accent-strong);
+  border-color: rgba(123, 223, 242, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(123, 223, 242, 0.3);
+}
+
+nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+  box-shadow: 0 0 10px var(--accent);
+}
+
+nav a:hover::after {
+  width: 60%;
+}
+
+@media (max-width: 768px) {
+  nav {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  nav ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem;
+  }
+
+  nav a {
+    width: 100%;
+    max-width: 240px;
+    text-align: center;
+  }
+}
+
 /* Antorchas cosmicas en las esquinas del escenario */
 .escenario-3d::before,
 .escenario-3d::after {
@@ -672,4 +1306,14 @@ nav ul,
 
 .slide-orbe {
   background: transparent;
+}
+
+.pantalla-entrada {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  border-radius: 0;
+  margin: 0;
+  z-index: 1000;
 }

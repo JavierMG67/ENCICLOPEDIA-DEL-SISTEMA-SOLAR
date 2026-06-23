@@ -507,5 +507,195 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   aplicarFiltro(filtroGuardado);
+
+  // === Rotacion interactiva de orbes del slider ===
+  const activarGiroDiscos = () => {
+    const discos = document.querySelectorAll(".slide-visual");
+
+    discos.forEach((disco) => {
+      if (disco.dataset.giroVinculado === "true") {
+        return;
+      }
+
+      const orbe = disco.querySelector(".slide-orbe");
+      if (!orbe) {
+        return;
+      }
+
+      let isDragging = false;
+      let startX = 0;
+      let startY = 0;
+      let currentRotateX = 0;
+      let currentRotateY = 0;
+      let previousRotateX = 0;
+      let previousRotateY = 0;
+      let velocityX = 0;
+      let velocityY = 0;
+      let lastX = 0;
+      let lastY = 0;
+      let lastTime = 0;
+      let animationId = null;
+
+      const obtenerPunto = (event) => {
+        const punto = event.touches ? event.touches[0] : event;
+        return {
+          x: punto.clientX,
+          y: punto.clientY,
+        };
+      };
+
+      const handleStart = (event) => {
+        isDragging = true;
+        const { x, y } = obtenerPunto(event);
+        startX = x;
+        startY = y;
+        lastX = x;
+        lastY = y;
+        lastTime = performance.now();
+        velocityX = 0;
+        velocityY = 0;
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+        }
+      };
+
+      const handleMove = (event) => {
+        if (!isDragging) {
+          return;
+        }
+
+        event.preventDefault();
+        const { x, y } = obtenerPunto(event);
+        const deltaX = x - startX;
+        const deltaY = y - startY;
+        const currentTime = performance.now();
+        const deltaTime = currentTime - lastTime || 16;
+
+        currentRotateY = previousRotateY + deltaX * 0.5;
+        currentRotateX = previousRotateX - deltaY * 0.5;
+
+        velocityX = ((x - lastX) / deltaTime) * 0.5;
+        velocityY = ((y - lastY) / deltaTime) * 0.5;
+
+        lastX = x;
+        lastY = y;
+        lastTime = currentTime;
+
+        orbe.style.transform = `rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg)`;
+      };
+
+      const handleEnd = () => {
+        if (!isDragging) {
+          return;
+        }
+
+        isDragging = false;
+        previousRotateX = currentRotateX;
+        previousRotateY = currentRotateY;
+
+        const animateInertia = () => {
+          velocityX *= 0.95;
+          velocityY *= 0.95;
+
+          currentRotateY += velocityX * 16;
+          currentRotateX += velocityY * 16;
+
+          orbe.style.transform = `rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg)`;
+
+          if (Math.abs(velocityX) > 0.1 || Math.abs(velocityY) > 0.1) {
+            animationId = requestAnimationFrame(animateInertia);
+          } else {
+            previousRotateX = currentRotateX;
+            previousRotateY = currentRotateY;
+            animationId = null;
+          }
+        };
+
+        if (Math.abs(velocityX) > 0.1 || Math.abs(velocityY) > 0.1) {
+          animateInertia();
+        }
+      };
+
+      disco.addEventListener("mousedown", handleStart);
+      window.addEventListener("mousemove", handleMove);
+      window.addEventListener("mouseup", handleEnd);
+      disco.addEventListener("touchstart", handleStart, { passive: false });
+      window.addEventListener("touchmove", handleMove, { passive: false });
+      window.addEventListener("touchend", handleEnd);
+      disco.dataset.giroVinculado = "true";
+    });
+  };
+
+  activarGiroDiscos();
+
+  const observerFiltro = new MutationObserver(() => activarGiroDiscos());
+  observerFiltro.observe(sliderTrack, {
+    childList: true,
+    subtree: true,
+  });
+
+  // === Control de pantalla de entrada ===
+  const pantallaEntrada = document.querySelector(".pantalla-entrada");
+  const btnAcceso = document.querySelector("#btnAccesoSimulador");
+  const seccionInicio = document.querySelector("#inicio");
+
+  document.body.classList.add("menu-activo");
+
+  btnAcceso?.addEventListener("click", () => {
+    pantallaEntrada?.classList.add("oculta");
+    document.body.classList.remove("menu-activo");
+
+    setTimeout(() => {
+      seccionInicio?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 300);
+
+    setTimeout(() => {
+      if (pantallaEntrada) {
+        pantallaEntrada.style.display = "none";
+      }
+    }, 800);
+  });
+
+  document.addEventListener(
+    "wheel",
+    (event) => {
+      if (document.body.classList.contains("menu-activo")) {
+        event.preventDefault();
+      }
+    },
+    { passive: false },
+  );
+
+  document.addEventListener(
+    "touchmove",
+    (event) => {
+      if (document.body.classList.contains("menu-activo")) {
+        event.preventDefault();
+      }
+    },
+    { passive: false },
+  );
+
+  document.addEventListener("keydown", (event) => {
+    if (!document.body.classList.contains("menu-activo")) {
+      return;
+    }
+
+    const teclasScroll = [
+      " ",
+      "Space",
+      "ArrowDown",
+      "ArrowUp",
+      "PageDown",
+      "PageUp",
+      "Home",
+      "End",
+    ];
+
+    if (teclasScroll.includes(event.key) || teclasScroll.includes(event.code)) {
+      event.preventDefault();
+    }
+  });
+
   requestAnimationFrame(animar);
 });

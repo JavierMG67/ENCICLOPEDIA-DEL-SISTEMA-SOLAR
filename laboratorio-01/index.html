@@ -13,12 +13,26 @@
   </head>
   <body>
     <header>
-      <h1>Enciclopedia del Sistema Solar</h1>
-      <nav aria-label="Navegacion principal">
-        <ul>
-          <li><a href="#inicio">Inicio</a></li>
-          <li><a href="#simulador">Simulador</a></li>
-        </ul>
+      <nav class="pantalla-entrada" role="navigation" aria-label="Pantalla de inicio">
+        <div class="espacio-fondo" aria-hidden="true">
+          <div class="planeta-fondo"></div>
+          <div class="estrellas"></div>
+        </div>
+
+        <div class="contenido-bienvenida">
+          <h1 class="titulo-espacial">
+            <span class="titulo-linea">Enciclopedia</span>
+            <span class="titulo-linea">del Sistema Solar</span>
+          </h1>
+
+          <button type="button" class="btn-inicio-principal" id="btnAccesoSimulador" aria-label="Acceder al simulador del sistema solar">
+              <span class="btn-icono">▶</span>
+              <span class="btn-texto">INICIO</span>
+              <span class="btn-brillo"></span>
+          </button>
+
+          <p class="instruccion-acceso">Presiona INICIO para explorar el sistema</p>
+        </div>
       </nav>
     </header>
 
