@@ -760,7 +760,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // No interferir con el trap de foco del panel de accesibilidad
     if (panelAcc?.classList.contains("abierto")) {
       return;
     }
@@ -792,8 +791,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // No redirigir el foco cuando el panel está abierto ni cuando
-    // el foco se mueve hacia el botón de accesibilidad (fuera de main)
     if (panelAcc?.classList.contains("abierto")) {
       return;
     }
@@ -801,7 +798,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       const activo = document.activeElement;
 
-      // Permitir foco en el botón de accesibilidad y en el panel aunque estén fuera de main
       if (btnAbrirAcc?.contains(activo) || panelAcc?.contains(activo)) {
         return;
       }
@@ -818,32 +814,27 @@ document.addEventListener("DOMContentLoaded", () => {
   requestAnimationFrame(animar);
 
   // =========================================================================
-  // === MÓDULO DE ACCESIBILIDAD — Ley N.° 7600 / WCAG 2.1 AA / CFIA ========
+  // === MODULO DE ACCESIBILIDAD — Ley N.° 7600 / WCAG 2.1 AA / CFIA ========
   // =========================================================================
 
-  // --- Claves de localStorage ---
   const PREFS = {
-    tamanoTexto:       "acc_tamano_texto",       // "normal" | "grande" | "extra-grande"
-    altoContraste:     "acc_alto_contraste",      // "1" | "0"
-    dislexia:          "acc_dislexia",            // "1" | "0"
-    subrayarEnlaces:   "acc_subrayar_enlaces",    // "1" | "0"
-    reducirAnimaciones:"acc_reducir_animaciones", // "1" | "0"
-    monocromatico:     "acc_monocromatico",       // "1" | "0"
-    espaciado:         "acc_espaciado",           // "1" | "0"
+    tamanoTexto:        "acc_tamano_texto",
+    altoContraste:      "acc_alto_contraste",
+    dislexia:           "acc_dislexia",
+    subrayarEnlaces:    "acc_subrayar_enlaces",
+    reducirAnimaciones: "acc_reducir_animaciones",
+    monocromatico:      "acc_monocromatico",
+    espaciado:          "acc_espaciado",
   };
 
-  // --- Referencias al DOM del panel ---
-  const panelAcc        = document.getElementById("panel-accesibilidad");
-  const panelOverlay    = document.getElementById("panel-overlay");
-  const btnAbrirAcc     = document.getElementById("btn-accesibilidad");
-  const btnCerrarAcc    = document.getElementById("btn-cerrar-acc");
+  const panelAcc          = document.getElementById("panel-accesibilidad");
+  const panelOverlay      = document.getElementById("panel-overlay");
+  const btnAbrirAcc       = document.getElementById("btn-accesibilidad");
+  const btnCerrarAcc      = document.getElementById("btn-cerrar-acc");
   const btnRestablecerAcc = document.getElementById("btn-restablecer-acc");
-  const accAnuncio      = document.getElementById("acc-anuncio");
+  const accAnuncio        = document.getElementById("acc-anuncio");
 
-  // Controles de tamaño de texto
-  const radiosTexto     = document.querySelectorAll('input[name="tamano-texto"]');
-
-  // Controles toggle
+  const radiosTexto         = document.querySelectorAll('input[name="tamano-texto"]');
   const toggleContraste     = document.getElementById("toggle-contraste");
   const toggleDislexia      = document.getElementById("toggle-dislexia");
   const toggleEnlaces       = document.getElementById("toggle-enlaces");
@@ -851,34 +842,29 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggleMonocromatico = document.getElementById("toggle-monocromatico");
   const toggleEspaciado     = document.getElementById("toggle-espaciado");
 
-  // --- Detección de preferencia del sistema: prefers-reduced-motion ---
   const prefiereMenosMovimiento = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   );
 
-  // --- Anunciar cambios a lectores de pantalla (WCAG 4.1.3) ---
   const anunciarCambio = (mensaje) => {
     if (!accAnuncio) return;
-    // Limpiar y reasignar para garantizar disparo del evento en lectores de pantalla
     accAnuncio.textContent = "";
     requestAnimationFrame(() => {
       accAnuncio.textContent = mensaje;
     });
   };
 
-  // --- Carga de preferencias desde localStorage ---
   const cargarPreferencias = () => {
     const prefs = {
-      tamanoTexto:       localStorage.getItem(PREFS.tamanoTexto)        || "normal",
-      altoContraste:     localStorage.getItem(PREFS.altoContraste)      === "1",
-      dislexia:          localStorage.getItem(PREFS.dislexia)           === "1",
-      subrayarEnlaces:   localStorage.getItem(PREFS.subrayarEnlaces)    === "1",
-      reducirAnimaciones:localStorage.getItem(PREFS.reducirAnimaciones) === "1",
-      monocromatico:     localStorage.getItem(PREFS.monocromatico)      === "1",
-      espaciado:         localStorage.getItem(PREFS.espaciado)          === "1",
+      tamanoTexto:        localStorage.getItem(PREFS.tamanoTexto)        || "normal",
+      altoContraste:      localStorage.getItem(PREFS.altoContraste)      === "1",
+      dislexia:           localStorage.getItem(PREFS.dislexia)           === "1",
+      subrayarEnlaces:    localStorage.getItem(PREFS.subrayarEnlaces)    === "1",
+      reducirAnimaciones: localStorage.getItem(PREFS.reducirAnimaciones) === "1",
+      monocromatico:      localStorage.getItem(PREFS.monocromatico)      === "1",
+      espaciado:          localStorage.getItem(PREFS.espaciado)          === "1",
     };
 
-    // Respetar prefers-reduced-motion del sistema operativo si no hay preferencia guardada
     if (localStorage.getItem(PREFS.reducirAnimaciones) === null) {
       prefs.reducirAnimaciones = prefiereMenosMovimiento.matches;
     }
@@ -886,11 +872,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return prefs;
   };
 
-  // --- Aplicar clases al <body> según preferencias ---
   const aplicarPreferencias = (prefs) => {
     const body = document.body;
 
-    // Tamaño de texto
     body.classList.remove("texto-grande", "texto-extra-grande");
     if (prefs.tamanoTexto === "grande") {
       body.classList.add("texto-grande");
@@ -898,33 +882,19 @@ document.addEventListener("DOMContentLoaded", () => {
       body.classList.add("texto-extra-grande");
     }
 
-    // Alto contraste
     body.classList.toggle("alto-contraste",     prefs.altoContraste);
-
-    // Fuente para dislexia
     body.classList.toggle("fuente-dislexia",    prefs.dislexia);
-
-    // Subrayar enlaces
     body.classList.toggle("subrayar-enlaces",   prefs.subrayarEnlaces);
-
-    // Reducir animaciones
     body.classList.toggle("sin-animaciones",    prefs.reducirAnimaciones);
-
-    // Modo monocromático
     body.classList.toggle("modo-monocromatico", prefs.monocromatico);
-
-    // Espaciado ampliado
     body.classList.toggle("espaciado-ampliado", prefs.espaciado);
   };
 
-  // --- Sincronizar controles del panel con el estado cargado ---
   const sincronizarControles = (prefs) => {
-    // Radios de tamaño de texto
     radiosTexto.forEach((radio) => {
       radio.checked = radio.value === prefs.tamanoTexto;
     });
 
-    // Toggles
     if (toggleContraste)     toggleContraste.checked     = prefs.altoContraste;
     if (toggleDislexia)      toggleDislexia.checked      = prefs.dislexia;
     if (toggleEnlaces)       toggleEnlaces.checked       = prefs.subrayarEnlaces;
@@ -933,17 +903,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (toggleEspaciado)     toggleEspaciado.checked     = prefs.espaciado;
   };
 
-  // --- Guardar una preferencia individual ---
   const guardarPreferencia = (clave, valor) => {
     localStorage.setItem(clave, valor);
   };
 
-  // --- Trap de foco dentro del panel (WCAG 2.1.2) ---
   const SELECTORES_FOCUSABLES =
     'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-  // Nota: offsetParent es null para elementos dentro de position:fixed,
-  // por lo que usamos offsetWidth/offsetHeight para detectar visibilidad.
   const obtenerFocusablesPanel = () =>
     Array.from(panelAcc.querySelectorAll(SELECTORES_FOCUSABLES)).filter(
       (el) => el.offsetWidth > 0 && el.offsetHeight > 0 && !el.closest("[inert]"),
@@ -972,7 +938,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // --- Abrir panel ---
   let elementoAntesDePanelAcc = null;
 
   const abrirPanel = () => {
@@ -987,7 +952,6 @@ document.addEventListener("DOMContentLoaded", () => {
     panelOverlay?.classList.add("visible");
     btnAbrirAcc?.setAttribute("aria-expanded", "true");
 
-    // Mover foco al primer elemento del panel
     requestAnimationFrame(() => {
       const focusables = obtenerFocusablesPanel();
       if (focusables.length > 0) focusables[0].focus();
@@ -996,7 +960,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("keydown", trapFoco);
   };
 
-  // --- Cerrar panel ---
   const cerrarPanel = () => {
     if (!panelAcc) return;
 
@@ -1009,13 +972,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.removeEventListener("keydown", trapFoco);
 
-    // Devolver el foco al botón que abrió el panel
     requestAnimationFrame(() => {
       (elementoAntesDePanelAcc || btnAbrirAcc)?.focus();
     });
   };
 
-  // --- Restablecer todas las preferencias ---
   const restablecerPreferencias = () => {
     Object.values(PREFS).forEach((clave) => localStorage.removeItem(clave));
     const prefsDefecto = cargarPreferencias();
@@ -1024,7 +985,6 @@ document.addEventListener("DOMContentLoaded", () => {
     anunciarCambio("Preferencias de accesibilidad restablecidas a los valores predeterminados.");
   };
 
-  // --- Listeners del botón flotante y botón cerrar ---
   btnAbrirAcc?.addEventListener("click", () => {
     if (panelAcc.classList.contains("abierto")) {
       cerrarPanel();
@@ -1035,17 +995,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   btnCerrarAcc?.addEventListener("click", cerrarPanel);
 
-  // Cerrar al hacer clic en el overlay
   panelOverlay?.addEventListener("click", cerrarPanel);
 
-  // Cerrar con tecla Escape (WCAG 2.1 — SC 1.4 / patrón de diálogo)
   document.addEventListener("keydown", (evento) => {
     if (evento.key === "Escape" && panelAcc?.classList.contains("abierto")) {
       cerrarPanel();
     }
   });
 
-  // --- Listener: tamaño de texto ---
   radiosTexto.forEach((radio) => {
     radio.addEventListener("change", () => {
       if (!radio.checked) return;
@@ -1057,11 +1014,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (valor === "extra-grande") document.body.classList.add("texto-extra-grande");
 
       const etiquetas = { normal: "Normal", grande: "Grande (125%)", "extra-grande": "Extra grande (150%)" };
-      anunciarCambio(`Tamaño de texto cambiado a ${etiquetas[valor] || valor}.`);
+      anunciarCambio(`Tamano de texto cambiado a ${etiquetas[valor] || valor}.`);
     });
   });
 
-  // --- Listener: alto contraste ---
   toggleContraste?.addEventListener("change", () => {
     const activo = toggleContraste.checked;
     guardarPreferencia(PREFS.altoContraste, activo ? "1" : "0");
@@ -1069,7 +1025,6 @@ document.addEventListener("DOMContentLoaded", () => {
     anunciarCambio(activo ? "Alto contraste activado." : "Alto contraste desactivado.");
   });
 
-  // --- Listener: fuente para dislexia ---
   toggleDislexia?.addEventListener("change", () => {
     const activo = toggleDislexia.checked;
     guardarPreferencia(PREFS.dislexia, activo ? "1" : "0");
@@ -1077,7 +1032,6 @@ document.addEventListener("DOMContentLoaded", () => {
     anunciarCambio(activo ? "Fuente Lexend para dislexia activada." : "Fuente para dislexia desactivada.");
   });
 
-  // --- Listener: subrayar enlaces ---
   toggleEnlaces?.addEventListener("change", () => {
     const activo = toggleEnlaces.checked;
     guardarPreferencia(PREFS.subrayarEnlaces, activo ? "1" : "0");
@@ -1085,7 +1039,6 @@ document.addEventListener("DOMContentLoaded", () => {
     anunciarCambio(activo ? "Subrayado de enlaces activado." : "Subrayado de enlaces desactivado.");
   });
 
-  // --- Listener: reducir animaciones ---
   toggleAnimaciones?.addEventListener("change", () => {
     const activo = toggleAnimaciones.checked;
     guardarPreferencia(PREFS.reducirAnimaciones, activo ? "1" : "0");
@@ -1093,7 +1046,6 @@ document.addEventListener("DOMContentLoaded", () => {
     anunciarCambio(activo ? "Animaciones reducidas." : "Animaciones normales restauradas.");
   });
 
-  // --- Listener: modo monocromático ---
   toggleMonocromatico?.addEventListener("change", () => {
     const activo = toggleMonocromatico.checked;
     guardarPreferencia(PREFS.monocromatico, activo ? "1" : "0");
@@ -1101,7 +1053,6 @@ document.addEventListener("DOMContentLoaded", () => {
     anunciarCambio(activo ? "Modo monocromatico activado." : "Modo monocromatico desactivado.");
   });
 
-  // --- Listener: espaciado ampliado ---
   toggleEspaciado?.addEventListener("change", () => {
     const activo = toggleEspaciado.checked;
     guardarPreferencia(PREFS.espaciado, activo ? "1" : "0");
@@ -1109,24 +1060,20 @@ document.addEventListener("DOMContentLoaded", () => {
     anunciarCambio(activo ? "Espaciado ampliado activado." : "Espaciado ampliado desactivado.");
   });
 
-  // --- Listener: restablecer preferencias ---
   btnRestablecerAcc?.addEventListener("click", restablecerPreferencias);
 
-  // --- Sincronizar con cambio del sistema operativo en prefers-reduced-motion ---
   prefiereMenosMovimiento.addEventListener("change", (e) => {
-    // Solo actualizar si el usuario no ha guardado una preferencia manual
     if (localStorage.getItem(PREFS.reducirAnimaciones) === null) {
       document.body.classList.toggle("sin-animaciones", e.matches);
       if (toggleAnimaciones) toggleAnimaciones.checked = e.matches;
     }
   });
 
-  // --- Inicialización: cargar y aplicar preferencias al arrancar ---
   const prefsIniciales = cargarPreferencias();
   aplicarPreferencias(prefsIniciales);
   sincronizarControles(prefsIniciales);
 
   // =========================================================================
-  // === FIN MÓDULO DE ACCESIBILIDAD =========================================
+  // === FIN MODULO DE ACCESIBILIDAD =========================================
   // =========================================================================
 });
