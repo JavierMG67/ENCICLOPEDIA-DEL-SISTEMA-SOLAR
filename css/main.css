@@ -297,21 +297,26 @@ nav ul,
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: stretch;
   gap: 1rem;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .slider-viewport {
   overflow: hidden;
   border-radius: 8px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .slider-track {
   display: flex;
   transition: transform 320ms ease;
+  width: 100%;
 }
 
 .slide-planeta {
+  width: 100%;
   min-width: 100%;
+  flex-shrink: 0;
   display: grid;
   grid-template-columns: minmax(10rem, 0.72fr) 1.28fr;
   gap: var(--gap);
@@ -320,6 +325,7 @@ nav ul,
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
   padding: clamp(1rem, 3vw, 2rem);
+  box-sizing: border-box;
 }
 
 .slide-visual {
@@ -408,12 +414,6 @@ nav ul,
   display: none;
 }
 
-:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
 @media (max-width: 768px) {
   nav ul {
     flex-direction: column;
@@ -494,6 +494,72 @@ nav ul,
   border-radius: 0;
   margin: 0;
   z-index: 1000;
+}
+
+/* === Accesibilidad del slider === */
+.slide-planeta:focus {
+  outline: none;
+}
+
+.slide-planeta:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+.slide-planeta button:focus-visible,
+.slide-planeta [tabindex]:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.btn-ficha:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(123, 223, 242, 0.3);
+}
+
+.slider-btn:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+  box-shadow: 0 0 20px rgba(123, 223, 242, 0.6);
+}
+
+.indicator:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 10px var(--focus);
+}
+
+/* Foco para elementos rectangulares */
+.btn-filtro:focus-visible,
+.controles-tiempo button:focus-visible,
+.slider-btn:focus-visible,
+.btn-ficha:focus-visible,
+.btn-inicio-principal:focus-visible,
+.indicator:focus-visible,
+nav a:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Foco circular para planetas */
+.planeta-visual:focus-visible,
+.sol-visual:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 3px var(--focus),
+    0 0 1.8rem var(--planet-color);
+}
+
+/* Foco circular para orbes del slider */
+.slide-visual:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+  border-radius: 50%;
 }
 
 /* === Pantalla de entrada bloqueante === */
@@ -1317,3 +1383,618 @@ nav a:hover::after {
   margin: 0;
   z-index: 1000;
 }
+
+
+/* ============================================================
+   CLASE UTILITARIA — Oculto visualmente, accesible por AT
+   (Screen-reader only, Ley 7600 / WCAG 1.3.1)
+   ============================================================ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================================
+   MODIFICADORES DE ACCESIBILIDAD DEL CUERPO
+   Conforme a Ley N.° 7600 y directrices CFIA Costa Rica
+   ============================================================ */
+
+/* --- Tamaño de texto --- */
+body.texto-grande {
+  font-size: 125%;
+}
+
+body.texto-extra-grande {
+  font-size: 150%;
+}
+
+/* --- Alto contraste (WCAG 1.4.3 / CFIA) --- */
+body.alto-contraste {
+  --text: #ffffff;
+  --text-secondary: #dddddd;
+  --accent: #ffff00;
+  --accent-strong: #ffff88;
+  --focus: #ffff00;
+  --orbit: rgba(255, 255, 0, 0.6);
+  background: #000000 !important;
+}
+
+body.alto-contraste::before,
+body.alto-contraste::after {
+  display: none;
+}
+
+body.alto-contraste nav {
+  background: #000000 !important;
+  border-bottom: 2px solid #ffff00 !important;
+}
+
+body.alto-contraste .escenario-3d {
+  background: #000000 !important;
+  border-color: #ffff00 !important;
+  box-shadow: 0 0 10px #ffff00 !important;
+}
+
+body.alto-contraste .controles-tiempo,
+body.alto-contraste .slide-planeta,
+body.alto-contraste .panel-accesibilidad {
+  background: #111111 !important;
+  border-color: #ffffff !important;
+}
+
+body.alto-contraste .btn-filtro,
+body.alto-contraste .controles-tiempo button,
+body.alto-contraste .slider-btn,
+body.alto-contraste .btn-ficha {
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+body.alto-contraste .btn-filtro[aria-pressed="true"],
+body.alto-contraste .controles-tiempo button[aria-pressed="true"],
+body.alto-contraste .btn-ficha[aria-expanded="true"] {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* --- Fuente para dislexia (Lexend — CFIA recomendación) --- */
+body.fuente-dislexia {
+  font-family: 'Lexend', sans-serif;
+}
+
+body.fuente-dislexia p,
+body.fuente-dislexia li,
+body.fuente-dislexia label,
+body.fuente-dislexia button,
+body.fuente-dislexia a,
+body.fuente-dislexia dt,
+body.fuente-dislexia dd {
+  letter-spacing: 0.04em;
+  word-spacing: 0.1em;
+  line-height: 1.9;
+}
+
+/* --- Subrayar todos los enlaces (WCAG 1.4.1) --- */
+body.subrayar-enlaces a {
+  text-decoration: underline !important;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+}
+
+/* --- Reducir animaciones (WCAG 2.3.3 / Ley 7600 Art. 46) --- */
+body.sin-animaciones *,
+body.sin-animaciones *::before,
+body.sin-animaciones *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* --- Modo monocromático (apoyo daltonismo / WCAG 1.4.11) --- */
+body.modo-monocromatico {
+  filter: grayscale(100%);
+}
+
+/* --- Espaciado ampliado (WCAG 1.4.12) --- */
+body.espaciado-ampliado {
+  letter-spacing: 0.12em;
+  word-spacing: 0.16em;
+  line-height: 2;
+}
+
+body.espaciado-ampliado p,
+body.espaciado-ampliado li,
+body.espaciado-ampliado dt,
+body.espaciado-ampliado dd {
+  line-height: 2;
+  letter-spacing: 0.12em;
+  word-spacing: 0.16em;
+}
+
+/* --- Respetar preferencia del sistema para animaciones --- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   BOTÓN FLOTANTE DE ACCESIBILIDAD — Diseño orbital espacial
+   ============================================================ */
+
+/* Animación del anillo orbital */
+@keyframes btn-acc-orbita {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Pulso de nebulosa al cargar */
+@keyframes btn-acc-pulso {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(123, 223, 242, 0.08), 0 0 22px rgba(123, 223, 242, 0.4), 0 6px 18px rgba(0,0,0,0.6); }
+  50%       { box-shadow: 0 0 0 7px rgba(123, 223, 242, 0.14), 0 0 36px rgba(123, 223, 242, 0.65), 0 6px 18px rgba(0,0,0,0.6); }
+}
+
+.btn-accesibilidad {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  /* Por encima del overlay (900) y del panel (1001) */
+  z-index: 1002;
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 38% 32%, rgba(123, 223, 242, 0.22) 0%, transparent 58%),
+    rgba(5, 5, 20, 0.96);
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  cursor: pointer;
+  font: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  animation: btn-acc-pulso 4s ease-in-out infinite;
+  transition: transform 0.25s ease, background 0.25s ease;
+  /* El ::before del anillo sobresale del botón */
+  overflow: visible;
+}
+
+/* Anillo orbital giratorio */
+.btn-accesibilidad::before {
+  content: '';
+  position: absolute;
+  inset: -9px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(123, 223, 242, 0.5);
+  animation: btn-acc-orbita 9s linear infinite;
+  pointer-events: none;
+}
+
+/* Tooltip "Accesibilidad" que aparece al hover */
+.btn-accesibilidad::after {
+  content: 'Accesibilidad';
+  position: absolute;
+  right: calc(100% + 1rem);
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(5, 5, 20, 0.95);
+  color: var(--accent);
+  border: 1px solid rgba(123, 223, 242, 0.45);
+  border-radius: 6px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.btn-accesibilidad:hover::after,
+.btn-accesibilidad:focus-visible::after {
+  opacity: 1;
+}
+
+.btn-acc-icono {
+  font-size: 1.5rem;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-accesibilidad:hover {
+  background:
+    radial-gradient(circle at 38% 32%, rgba(123, 223, 242, 0.3) 0%, transparent 58%),
+    rgba(8, 8, 28, 0.97);
+  transform: translateY(-2px) scale(1.06);
+  animation: none;
+  box-shadow:
+    0 0 0 6px rgba(123, 223, 242, 0.14),
+    0 0 38px rgba(123, 223, 242, 0.65),
+    0 8px 22px rgba(0, 0, 0, 0.65);
+}
+
+.btn-accesibilidad:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 5px;
+  animation: none;
+}
+
+/* Estado: panel abierto — anillo más rápido y brillante */
+.btn-accesibilidad[aria-expanded="true"] {
+  background:
+    radial-gradient(circle at 38% 32%, rgba(123, 223, 242, 0.35) 0%, transparent 55%),
+    rgba(5, 5, 20, 0.97);
+  border-color: var(--accent-strong);
+  animation: none;
+  box-shadow:
+    0 0 0 6px rgba(123, 223, 242, 0.18),
+    0 0 44px rgba(123, 223, 242, 0.75),
+    0 8px 22px rgba(0, 0, 0, 0.65);
+}
+
+.btn-accesibilidad[aria-expanded="true"]::before {
+  animation-duration: 2.5s;
+  border-color: rgba(123, 223, 242, 0.85);
+  border-style: solid;
+}
+
+/* ============================================================
+   OVERLAY DEL PANEL
+   ============================================================ */
+.panel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 900;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.panel-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ============================================================
+   PANEL DE ACCESIBILIDAD (dialogo)
+   ============================================================ */
+.panel-accesibilidad {
+  position: fixed;
+  bottom: 5.5rem;
+  right: 2rem;
+  width: min(90vw, 390px);
+  max-height: 72vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: rgba(5, 5, 20, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid var(--accent);
+  border-radius: 14px;
+  z-index: 1001;
+  box-shadow:
+    0 0 40px rgba(123, 223, 242, 0.3),
+    0 20px 60px rgba(0, 0, 0, 0.8);
+  /* Animación de apertura: escala desde la esquina inferior derecha */
+  transform: scale(0.92) translateY(12px);
+  opacity: 0;
+  visibility: hidden;
+  transform-origin: bottom right;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease,
+    visibility 0.25s ease;
+}
+
+.panel-accesibilidad.abierto {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Scrollbar del panel */
+.panel-accesibilidad::-webkit-scrollbar {
+  width: 5px;
+}
+.panel-accesibilidad::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+.panel-accesibilidad::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+/* --- Cabecera del panel --- */
+.panel-acc-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1.2rem 0.8rem;
+  border-bottom: 1px solid rgba(123, 223, 242, 0.2);
+  position: sticky;
+  top: 0;
+  background: rgba(5, 5, 20, 0.98);
+  z-index: 2;
+}
+
+.panel-acc-titulo {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.btn-cerrar-panel {
+  background: transparent;
+  border: 2px solid rgba(123, 223, 242, 0.3);
+  border-radius: 50%;
+  color: var(--accent);
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-cerrar-panel:hover {
+  background: rgba(123, 223, 242, 0.15);
+  border-color: var(--accent);
+}
+
+.btn-cerrar-panel:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* --- Cuerpo del panel --- */
+.panel-acc-cuerpo {
+  padding: 0.8rem 1.2rem 1rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+/* --- Grupos con fieldset --- */
+.acc-grupo {
+  border: 1px solid rgba(123, 223, 242, 0.18);
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem 0.8rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.acc-grupo-titulo {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent-strong);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* --- Radio group para tamaño de texto --- */
+.acc-radio-grupo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.acc-radio-opcion {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid rgba(123, 223, 242, 0.25);
+  border-radius: 20px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+  flex: 1 0 auto;
+  justify-content: center;
+}
+
+.acc-radio-opcion:has(input:checked) {
+  border-color: var(--accent);
+  background: rgba(123, 223, 242, 0.12);
+  color: var(--accent);
+}
+
+.acc-radio-opcion input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.acc-radio-indicador {
+  display: none; /* usamos el estilo del label completo */
+}
+
+.acc-radio-opcion input[type="radio"]:focus-visible ~ .acc-radio-texto {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* --- Toggle switches (Ley 7600: controles claramente identificables) --- */
+.acc-toggles-lista {
+  display: grid;
+  gap: 0.1rem;
+  margin-top: 0.5rem;
+}
+
+.acc-toggle-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.5rem 0.4rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.acc-toggle-fila:hover {
+  background: rgba(123, 223, 242, 0.06);
+}
+
+.acc-toggle-texto {
+  font-size: 0.84rem;
+  color: var(--text);
+  flex: 1;
+  user-select: none;
+}
+
+.acc-toggle-envoltura {
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Input real: toma todo el espacio clickeable pero invisible */
+.acc-toggle-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  margin: 0;
+  z-index: 1;
+}
+
+/* Pista (track) del toggle */
+.acc-toggle-pista {
+  display: block;
+  width: 2.8rem;
+  height: 1.5rem;
+  background: rgba(255, 255, 255, 0.12);
+  border: 2px solid rgba(123, 223, 242, 0.3);
+  border-radius: 1rem;
+  position: relative;
+  transition: background 0.22s ease, border-color 0.22s ease;
+  pointer-events: none;
+}
+
+/* Pulgar (thumb) del toggle */
+.acc-toggle-pulgar {
+  display: block;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 1rem;
+  height: 1rem;
+  background: var(--text-secondary);
+  border-radius: 50%;
+  transition: transform 0.22s ease, background 0.22s ease;
+}
+
+/* Estado: checked */
+.acc-toggle-input:checked + .acc-toggle-pista {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.acc-toggle-input:checked + .acc-toggle-pista .acc-toggle-pulgar {
+  transform: translateX(1.3rem);
+  background: var(--bg);
+}
+
+/* Foco visible en el toggle (WCAG 2.4.7) */
+.acc-toggle-input:focus-visible + .acc-toggle-pista {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 1rem;
+}
+
+/* --- Botón restablecer --- */
+.btn-restablecer-acc {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8rem;
+  width: 100%;
+  margin-top: 0.4rem;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.btn-restablecer-acc:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-restablecer-acc:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* --- Aviso legal Ley 7600 / CFIA --- */
+.acc-aviso-legal {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  padding: 0.6rem 0.5rem;
+  border-top: 1px solid rgba(123, 223, 242, 0.12);
+  margin-top: 0.4rem;
+}
+
+.acc-aviso-legal strong {
+  color: var(--accent);
+}
+
+/* Panel mobile: baja desde arriba en pantallas pequeñas */
+@media (max-width: 640px) {
+  .panel-accesibilidad {
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    max-height: 85vh;
+    border-radius: 16px 16px 0 0;
+    border-bottom: none;
+    transform-origin: bottom center;
+  }
+
+  .btn-accesibilidad {
+    bottom: 1.2rem;
+    right: 1.2rem;
+    padding: 0.6rem 0.9rem;
+  }
+}
+
